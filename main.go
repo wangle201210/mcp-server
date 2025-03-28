@@ -17,10 +17,13 @@ func main() {
 	)
 
 	// Add tool handler
-	s.AddTool(getDtTimeTool(), dtTimeHandler)
-	s.AddTool(getDtDecodeTool(), dtDecodeHandler)
-	s.AddTool(getCarTool(), carHandler)
+	// s.AddTool(getDtTimeTool(), dtTimeHandler)
+	// s.AddTool(getDtDecodeTool(), dtDecodeHandler)
+	// s.AddTool(getCarTool(), carHandler)
+	// s.AddTool(getDifyTool(), difyHandler)
+	s.AddTool(getText2sqlTool(), text2sqlHandler)
 	// // Start the stdio server
+	// {"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"dify/retriever","arguments":{"query":"test"}}}
 	if err := server.ServeStdio(s); err != nil {
 		fmt.Printf("Server error: %v\n", err)
 	}
