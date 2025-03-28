@@ -1,5 +1,11 @@
 # mcp-server
+## 安装
 
+```bash
+go install github.com/wangle201210/mcp-server
+```
+
+## 配置
 ```json
 {
     "mcpServers": {
