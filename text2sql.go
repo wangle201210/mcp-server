@@ -50,7 +50,7 @@ func text2sqlHandler(ctx context.Context, request mcp.CallToolRequest) (*mcp.Cal
 		Try:       try,
 		ShouldRun: run,
 		Times:     times,
-		OnlyView:  true,
+		// OnlyView:  true,
 	}
 	sql, result, err := ts.Pretty(question)
 	if err != nil {
