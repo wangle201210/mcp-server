@@ -1,4 +1,4 @@
-package main
+package helper
 
 import (
 	"fmt"
@@ -6,24 +6,18 @@ import (
 	"github.com/mark3labs/mcp-go/server"
 )
 
-func main() {
-	// Create MCP server
+func NewServer(name string) *server.MCPServer {
 	s := server.NewMCPServer(
-		"wanna`s mcp server",
+		name,
 		"1.0.0",
 		server.WithResourceCapabilities(true, true),
 		server.WithPromptCapabilities(true),
 		server.WithLogging(),
 	)
+	return s
+}
 
-	// Add tool handler
-	// s.AddTool(getDtTimeTool(), dtTimeHandler)
-	// s.AddTool(getDtDecodeTool(), dtDecodeHandler)
-	// s.AddTool(getCarTool(), carHandler)
-	// s.AddTool(getDifyTool(), difyHandler)
-	s.AddTool(getText2sqlTool(), text2sqlHandler)
-	// // Start the stdio server
-	// {"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"dify/retriever","arguments":{"query":"test"}}}
+func ServerRun(s *server.MCPServer) {
 	if err := server.ServeStdio(s); err != nil {
 		fmt.Printf("Server error: %v\n", err)
 	}
