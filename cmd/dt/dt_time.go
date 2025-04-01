@@ -10,7 +10,7 @@ import (
 )
 
 func getDtTimeTool() mcp.Tool {
-	return mcp.NewTool("dt/time",
+	return mcp.NewTool("dt_time",
 		mcp.WithDescription("时间戳转时间"),
 		mcp.WithNumber("timestamp",
 			mcp.Required(),

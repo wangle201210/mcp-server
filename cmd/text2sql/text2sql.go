@@ -12,7 +12,7 @@ import (
 )
 
 func getText2sqlTool() mcp.Tool {
-	return mcp.NewTool("dt/texe2sql",
+	return mcp.NewTool("dt_texe2sql",
 		mcp.WithDescription("数据库查询"),
 		mcp.WithString("question",
 			mcp.Required(),

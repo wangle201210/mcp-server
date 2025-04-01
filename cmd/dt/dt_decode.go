@@ -10,7 +10,7 @@ import (
 )
 
 func getDtDecodeTool() mcp.Tool {
-	return mcp.NewTool("dt/decrypt",
+	return mcp.NewTool("dt_decrypt",
 		mcp.WithDescription("解密数据"),
 		mcp.WithString("requestId",
 			mcp.Required(),
