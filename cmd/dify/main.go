@@ -7,6 +7,6 @@ import (
 func main() {
 	s := helper.NewServer("text2sql")
 	s.AddTool(getDifyTool(), difyHandler)
-	// {"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"dify/retriever","arguments":{"query":"test"}}}
+	// {"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"dify_retriever","arguments":{"query":"test"}}}
 	helper.ServerRun(s)
 }

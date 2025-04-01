@@ -6,7 +6,7 @@ require (
 	github.com/cloudwego/eino-ext/components/retriever/dify v0.0.0-20250326075314-149c6522c118
 	github.com/mark3labs/mcp-go v0.17.0
 	github.com/wangle201210/dt v0.0.2
-	github.com/wangle201210/text2sql v0.0.2
+	github.com/wangle201210/text2sql v0.0.3
 )
 
 require (
