@@ -7,8 +7,10 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/cloudwego/eino-ext/components/model/openai"
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/wangle201210/text2sql"
+	"github.com/wangle201210/text2sql/eino"
 )
 
 func getText2sqlTool() mcp.Tool {
@@ -45,13 +47,22 @@ func text2sqlHandler(ctx context.Context, request mcp.CallToolRequest) (*mcp.Cal
 	if times == 0 {
 		times = 3
 	}
-	ts := &text2sql.Text2sql{
+	cfg := &text2sql.Config{
 		DbLink:    link,
 		Try:       try,
 		ShouldRun: run,
 		Times:     times,
 		// OnlyView:  true,
 	}
+	newEino, err := eino.NewEino(&openai.ChatModelConfig{
+		APIKey:  os.Getenv("OPENAI_API_KEY"),
+		BaseURL: os.Getenv("OPENAI_BASE_URL"),
+		Model:   os.Getenv("OPENAI_MODEL_NAME"),
+	})
+	if err != nil {
+		return nil, fmt.Errorf("eino err: %+v", err)
+	}
+	ts := text2sql.NewText2sql(cfg, newEino)
 	sql, result, err := ts.Pretty(question)
 	if err != nil {
 		return nil, fmt.Errorf("text2sql err: %+v", err)
