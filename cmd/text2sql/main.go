@@ -1,12 +1,17 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/wangle201210/mcp-server/helper"
 )
 
 func main() {
-	s := helper.NewServer("text2sql")
-	s.AddTool(getText2sqlTool(), text2sqlHandler)
-	// {"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"dt_texe2sql","arguments":{"question":"18888888888 这个手机号的用户的身份证是多少"}}}
-	helper.ServerRun(s)
+	s := helper.NewServer("data_transfer")
+	// 注册工具和处理函数
+	s.RegisterTool(getText2sqlTool(), text2sqlHandler)
+	// 启动服务
+	if err := s.Run(); err != nil {
+		fmt.Printf("Server error: %v\n", err)
+	}
 }

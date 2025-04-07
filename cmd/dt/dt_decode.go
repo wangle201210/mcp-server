@@ -1,34 +1,40 @@
 package main
 
 import (
-	"context"
 	"errors"
 	"fmt"
 
-	"github.com/mark3labs/mcp-go/mcp"
+	"github.com/ThinkInAIXYZ/go-mcp/protocol"
 	"github.com/wangle201210/dt/sdk/decode"
 )
 
-func getDtDecodeTool() mcp.Tool {
-	return mcp.NewTool("dt_decrypt",
-		mcp.WithDescription("解密数据"),
-		mcp.WithString("requestId",
-			mcp.Required(),
-			mcp.Description("requestId是解密时使用的key"),
-		),
-		mcp.WithString("data",
-			mcp.Required(),
-			mcp.Description("data是需要被解密的数据"),
-		),
-	)
+func getDtDecodeTool() *protocol.Tool {
+	return &protocol.Tool{
+		Name:        "dt_decrypt",
+		Description: "解密数据",
+		InputSchema: protocol.InputSchema{
+			Type: protocol.Object,
+			Properties: map[string]interface{}{
+				"requestId": map[string]string{
+					"type":        "string",
+					"description": "requestId是解密时使用的key",
+				},
+				"data": map[string]string{
+					"type":        "string",
+					"description": "data是需要被解密的数据",
+				},
+			},
+			Required: []string{"requestId", "data"},
+		},
+	}
 }
 
-func dtDecodeHandler(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-	key, ok := request.Params.Arguments["requestId"].(string)
+func dtDecodeHandler(request *protocol.CallToolRequest) (*protocol.CallToolResult, error) {
+	key, ok := request.Arguments["requestId"].(string)
 	if !ok {
 		return nil, errors.New("requestId must be a string")
 	}
-	data, ok := request.Params.Arguments["data"].(string)
+	data, ok := request.Arguments["data"].(string)
 	if !ok {
 		return nil, errors.New("data must be a string")
 	}
@@ -36,5 +42,12 @@ func dtDecodeHandler(ctx context.Context, request mcp.CallToolRequest) (*mcp.Cal
 	if err != nil {
 		return nil, errors.New(fmt.Sprintf("DoDecrypt err: %+v", err))
 	}
-	return mcp.NewToolResultText(res), nil
+	return &protocol.CallToolResult{
+		Content: []protocol.Content{
+			protocol.TextContent{
+				Type: "text",
+				Text: res,
+			},
+		},
+	}, nil
 }

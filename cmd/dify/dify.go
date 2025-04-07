@@ -7,30 +7,37 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/ThinkInAIXYZ/go-mcp/protocol"
 	"github.com/cloudwego/eino-ext/components/retriever/dify"
-	"github.com/mark3labs/mcp-go/mcp"
 )
 
-func getDifyTool() mcp.Tool {
+func getDifyTool() *protocol.Tool {
 	datasetName := os.Getenv("DIFY_DATASET_NAME")
-	return mcp.NewTool("dify_retriever",
-		mcp.WithDescription(fmt.Sprintf("检索 %s 知识库", datasetName)),
-		mcp.WithString("query",
-			mcp.Required(),
-			mcp.Description("检索内容"),
-		),
-	)
+	return &protocol.Tool{
+		Name:        "dify_retriever",
+		Description: fmt.Sprintf("检索 %s 知识库", datasetName),
+		InputSchema: protocol.InputSchema{
+			Type: protocol.Object,
+			Properties: map[string]interface{}{
+				"query": map[string]string{
+					"type":        "string",
+					"description": "检索内容",
+				},
+			},
+			Required: []string{"query"},
+		},
+	}
 }
 
-func difyHandler(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-	query, ok := request.Params.Arguments["query"].(string)
+func difyHandler(request *protocol.CallToolRequest) (*protocol.CallToolResult, error) {
+	query, ok := request.Arguments["query"].(string)
 	if !ok {
 		return nil, errors.New("query must be a string")
 	}
 	APIKey := os.Getenv("DIFY_DATASET_API_KEY")
 	Endpoint := os.Getenv("DIFY_ENDPOINT")
 	DatasetID := os.Getenv("DIFY_DATASET_ID")
-	ret, err := dify.NewRetriever(ctx, &dify.RetrieverConfig{
+	ret, err := dify.NewRetriever(context.Background(), &dify.RetrieverConfig{
 		APIKey:    APIKey,
 		Endpoint:  Endpoint,
 		DatasetID: DatasetID,
@@ -38,21 +45,20 @@ func difyHandler(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToo
 	if err != nil {
 		return nil, err
 	}
-
-	// do search
-	docs, err := ret.Retrieve(ctx, query)
+	docs, err := ret.Retrieve(context.Background(), query)
 	if err != nil {
 		return nil, err
 	}
-	// // print docs
-	// for _, doc := range docs {
-	// 	fmt.Printf("doc id: %s\n", doc.ID)
-	// 	fmt.Printf("doc content: %s\n", doc.Content)
-	// 	fmt.Printf("score: %v\n\n", doc.Score())
-	// }
 	marshal, err := json.Marshal(docs)
 	if err != nil {
 		return nil, err
 	}
-	return mcp.NewToolResultText(string(marshal)), nil
+	return &protocol.CallToolResult{
+		Content: []protocol.Content{
+			protocol.TextContent{
+				Type: "text",
+				Text: string(marshal),
+			},
+		},
+	}, nil
 }

@@ -1,29 +1,24 @@
 package helper
 
 import (
-	"fmt"
+	"log"
 
-	"github.com/mark3labs/mcp-go/server"
+	"github.com/ThinkInAIXYZ/go-mcp/protocol"
+	"github.com/ThinkInAIXYZ/go-mcp/server"
+	"github.com/ThinkInAIXYZ/go-mcp/transport"
 )
 
-func NewServer(name string) *server.MCPServer {
-	s := server.NewMCPServer(
-		name,
-		"1.0.0",
-		server.WithResourceCapabilities(true, true),
-		server.WithPromptCapabilities(true),
-		server.WithLogging(),
+func NewServer(name string) *server.Server {
+	// 创建MCP服务器
+	s, err := server.NewServer(
+		transport.NewStdioServerTransport(),
+		server.WithServerInfo(protocol.Implementation{
+			Name:    name,
+			Version: "1.0.0",
+		}),
 	)
-	return s
-}
-
-func ServerRun(s *server.MCPServer) {
-	if err := server.ServeStdio(s); err != nil {
-		fmt.Printf("Server error: %v\n", err)
+	if err != nil {
+		log.Fatalf("Failed to create server: %v", err)
 	}
-	// sseServer := server.NewSSEServer(s, server.WithBaseURL("http://localhost:8088"))
-	// log.Printf("SSE server listening on :8088")
-	// if err := sseServer.Start(":8088"); err != nil {
-	// 	log.Fatalf("Server error: %v", err)
-	// }
+	return s
 }
