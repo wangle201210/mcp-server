@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	s := helper.NewServer("data_transfer")
+	s := helper.NewServer("text2sql")
 	// 注册工具和处理函数
 	s.RegisterTool(getText2sqlTool(), text2sqlHandler)
 	// 启动服务

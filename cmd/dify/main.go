@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	s := helper.NewServer("text2sql")
+	s := helper.NewServer("dify_retriever")
 	s.RegisterTool(getDifyTool(), difyHandler)
 	// {"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"dify_retriever","arguments":{"query":"test"}}}
 	// 启动服务
