@@ -13,7 +13,7 @@ import (
 
 func getText2sqlTool() *protocol.Tool {
 	return &protocol.Tool{
-		Name:        "texe2sql",
+		Name:        "text2sql",
 		Description: "自然语言转数据库查询",
 		InputSchema: protocol.InputSchema{
 			Type: protocol.Object,
